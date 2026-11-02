@@ -1,0 +1,4 @@
+Contact: mailto:nick@nicknieuwenhuis.com
+Expires: 2027-10-31T23:59:59Z
+Preferred-Languages: en, nl
+Canonical: https://nicknieuwenhuis.com/.well-known/security.txt
