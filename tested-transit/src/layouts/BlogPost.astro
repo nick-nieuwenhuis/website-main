@@ -8,7 +8,7 @@ import Header from '../components/Header.astro';
 
 type Props = CollectionEntry<'blog'>['data'];
 
-const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
+const { title, description, pubDate, updatedDate, heroImage, language, tags } = Astro.props;
 ---
 
 <html lang="en">
@@ -44,10 +44,33 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 			}
 			.title h1 {
 				margin: 0 0 0.5em 0;
+				font-size: 2.5em;
+				line-height: 1.1;
+				letter-spacing: -0.02em;
 			}
 			.date {
 				margin-bottom: 0.5em;
 				color: rgb(var(--gray));
+			}
+			.metadata {
+				display: flex;
+				flex-wrap: wrap;
+				justify-content: center;
+				align-items: center;
+				gap: 0.5em;
+				margin-bottom: 1.5em;
+				font-size: 0.75em;
+			}
+			.metadata > span:first-child {
+				color: rgb(var(--gray));
+				font-weight: 600;
+			}
+			.tag {
+				padding: 0.25em 0.65em;
+				border: 1px solid rgb(var(--gray-light));
+				border-radius: 999px;
+				color: rgb(var(--gray-dark));
+				background: white;
 			}
 			.last-updated-on {
 				font-style: italic;
@@ -64,14 +87,12 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 				</div>
 				<div class="prose">
 					<div class="title">
-						<div class="date">
-							<FormattedDate date={pubDate} />
-							{updatedDate && (
-								<div class="last-updated-on">
-									Last updated on <FormattedDate date={updatedDate} />
-								</div>
-							)}
-						</div>
+						<div class="metadata">
+							<span>{language === 'nl' ? 'Nederlands' : 'English'}</span>
+								{tags?.map((tag) => (
+									<span class="tag">{tag}</span>
+								))}
+							</div>
 						<h1>{title}</h1>
 						<hr />
 					</div>

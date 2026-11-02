@@ -1,0 +1,382 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead
+			title="Privacy Statement | Nick Nieuwenhuis"
+			description="Privacy information for nicknieuwenhuis.com."
+		/>
+	</head>
+
+	<body>
+		<Header />
+
+		<main>
+			<header class="privacy-header">
+				<span class="section-kicker">Privacy</span>
+
+				<h1>Privacy Statement</h1>
+
+				<p>
+					This website is designed to collect as little personal information
+					as possible.
+				</p>
+			</header>
+
+			<div class="privacy-layout">
+				<aside class="privacy-summary">
+					<h2>In short</h2>
+
+					<p>
+						This website does not use a contact form, advertising trackers
+						or marketing cookies.
+					</p>
+
+					<p>
+						Privacy-focused analytics are used only to understand aggregate
+						website usage. They are not used for advertising or profiling.
+					</p>
+
+					<p>
+						If you choose to contact me, your message is sent directly through
+						your email provider rather than submitted through this website.
+					</p>
+
+					<p>
+						Questions about privacy can be sent to:
+					</p>
+
+					<a href="mailto:nick@nicknieuwenhuis.com">
+						nick@nicknieuwenhuis.com
+					</a>
+				</aside>
+
+				<article class="privacy-content">
+					<section>
+						<h2>Who is responsible?</h2>
+
+						<p>
+							Nick Nieuwenhuis is responsible for nicknieuwenhuis.com and
+							for any personal information processed directly in connection
+							with this website.
+						</p>
+
+						<p>
+							If you have a question about this statement, contact{' '}
+							<a href="mailto:nick@nicknieuwenhuis.com">
+								nick@nicknieuwenhuis.com
+							</a>.
+						</p>
+					</section>
+
+					<section>
+						<h2>Contact by email</h2>
+
+						<p>
+							This website does not use a contact form. Contact links open
+							your email application so that you can contact me directly at{' '}
+							<a href="mailto:nick@nicknieuwenhuis.com">
+								nick@nicknieuwenhuis.com
+							</a>.
+						</p>
+
+						<p>
+							Your name, email address and message are therefore not submitted
+							to or stored by this website as part of a contact form.
+						</p>
+
+						<p>
+							If you choose to contact me by email, the information in your
+							message will be used to respond to your enquiry and, where
+							relevant, to communicate about a speaking engagement,
+							collaboration or other professional request.
+						</p>
+					</section>
+
+					<section>
+						<h2>Analytics, cookies and tracking</h2>
+
+						<p>
+							This website uses Vercel Web Analytics to understand aggregate
+							website usage, such as visitor numbers, page views and which
+							pages are visited.
+						</p>
+
+						<p>
+							Vercel Web Analytics does not use analytics cookies. Vercel
+							states that analytics data is anonymized and that visitors
+							cannot be tracked between different days or websites.
+						</p>
+
+						<p>
+							Analytics are used only to understand how the website and its
+							content are being used. They are not used for advertising,
+							cross-site tracking or building individual visitor profiles.
+						</p>
+					</section>
+
+					<section>
+						<h2>Hosting</h2>
+
+						<p>
+							This website is hosted by Vercel. As the hosting provider,
+							Vercel provides the infrastructure used to deliver the website.
+						</p>
+
+						<p>
+							Vercel Web Analytics is also used to provide the aggregate
+							website usage statistics described above.
+						</p>
+					</section>
+
+					<section>
+						<h2>External links</h2>
+
+						<p>
+							This website contains links to external websites and services,
+							including professional profiles, publications and research
+							platforms.
+						</p>
+
+						<p>
+							When you follow an external link, the privacy practices of the
+							external website or service apply. Those services may process
+							information independently from nicknieuwenhuis.com.
+						</p>
+					</section>
+
+					<section>
+						<h2>Security and data minimization</h2>
+
+						<p>
+							The website is intentionally designed to minimize the amount of
+							personal information it processes. Contact messages are not
+							routed through or stored by the website, and analytics are
+							limited to aggregate website usage.
+						</p>
+
+						<p>
+							Please do not send passwords, payment information, medical
+							information or other highly sensitive personal information by
+							ordinary email.
+						</p>
+					</section>
+
+					<section>
+						<h2>Your rights</h2>
+
+						<p>
+							If personal information relating to you is processed directly
+							by me, you may have rights under applicable data protection law,
+							including rights relating to access, correction and deletion.
+						</p>
+
+						<p>
+							For questions or requests, email{' '}
+							<a href="mailto:nick@nicknieuwenhuis.com">
+								nick@nicknieuwenhuis.com
+							</a>.
+						</p>
+
+						<p>
+							You also have the right to submit a complaint to the Dutch
+							Autoriteit Persoonsgegevens.
+						</p>
+					</section>
+
+					<section>
+						<h2>Changes to this statement</h2>
+
+						<p>
+							This statement may be updated if the website or the services
+							used to operate it change. The current version will always be
+							published on this page.
+						</p>
+
+						<p class="last-updated">
+							Last updated: 2 November 2026
+						</p>
+					</section>
+				</article>
+			</div>
+		</main>
+
+		<Footer />
+	</body>
+</html>
+
+<style>
+	/* Header */
+
+	.privacy-header {
+		max-width: none;
+		margin-bottom: 3rem;
+	}
+
+	.section-kicker {
+		display: inline-block;
+		margin-bottom: 0.8rem;
+		color: var(--accent);
+		font-size: 0.66em;
+		font-weight: 600;
+		line-height: 1.4;
+		letter-spacing: 0.035em;
+	}
+
+	.privacy-header h1 {
+		margin: 0 0 0.8rem 0;
+		font-size: clamp(2.6rem, 4.5vw, 3.8rem);
+		line-height: 1.06;
+		letter-spacing: -0.025em;
+	}
+
+	.privacy-header p {
+		max-width: none;
+		margin: 0;
+		color: rgb(var(--gray));
+		font-size: 0.82em;
+		line-height: 1.6;
+	}
+
+	/* Layout */
+
+	.privacy-layout {
+		display: grid;
+		grid-template-columns: minmax(220px, 0.55fr) minmax(0, 1.45fr);
+		gap: 4rem;
+		align-items: start;
+		padding: 3rem 0;
+		border-top: 1.5px solid rgb(180, 187, 200);
+		border-bottom: 1.5px solid rgb(180, 187, 200);
+	}
+
+	/* Summary */
+
+	.privacy-summary {
+		position: sticky;
+		top: 2rem;
+	}
+
+	.privacy-summary h2 {
+		margin: 0 0 0.75rem 0;
+		font-size: 1.3em;
+		line-height: 1.25;
+	}
+
+	.privacy-summary p {
+		margin: 0 0 1rem 0;
+		color: rgb(var(--gray));
+		font-size: 0.7em;
+		line-height: 1.65;
+	}
+
+	.privacy-summary a {
+		color: var(--accent);
+		font-size: 0.68em;
+		font-weight: 600;
+		text-decoration: none;
+		overflow-wrap: anywhere;
+	}
+
+	.privacy-summary a:hover {
+		color: var(--accent-dark);
+		text-decoration: underline;
+	}
+
+	/* Statement */
+
+	.privacy-content {
+		min-width: 0;
+	}
+
+	.privacy-content section {
+		padding: 0 0 2rem 0;
+		margin-bottom: 2rem;
+		border-bottom: 1px solid rgb(205, 211, 220);
+	}
+
+	.privacy-content section:last-child {
+		padding-bottom: 0;
+		margin-bottom: 0;
+		border-bottom: 0;
+	}
+
+	.privacy-content h2 {
+		margin: 0 0 0.8rem 0;
+		font-size: 1.25em;
+		line-height: 1.25;
+	}
+
+	.privacy-content p {
+		max-width: 760px;
+		margin: 0 0 0.9rem 0;
+		color: rgb(var(--gray-dark));
+		font-size: 0.74em;
+		line-height: 1.7;
+	}
+
+	.privacy-content p:last-child {
+		margin-bottom: 0;
+	}
+
+	.privacy-content a {
+		color: var(--accent);
+		font-weight: 600;
+		text-decoration: none;
+	}
+
+	.privacy-content a:hover {
+		color: var(--accent-dark);
+		text-decoration: underline;
+	}
+
+	.last-updated {
+		color: rgb(var(--gray)) !important;
+		font-size: 0.66em !important;
+		font-style: italic;
+	}
+
+	/* Responsive */
+
+	@media (max-width: 800px) {
+		.privacy-layout {
+			grid-template-columns: 1fr;
+			gap: 2.5rem;
+		}
+
+		.privacy-summary {
+			position: static;
+			max-width: 680px;
+		}
+	}
+
+	@media (max-width: 600px) {
+		.privacy-header {
+			margin-bottom: 2.5rem;
+		}
+
+		.privacy-header h1 {
+			font-size: 2.5rem;
+		}
+
+		.privacy-layout {
+			padding: 2rem 0;
+		}
+
+		.privacy-content section {
+			padding-bottom: 1.5rem;
+			margin-bottom: 1.5rem;
+		}
+	}
+
+	@media (max-width: 480px) {
+		.privacy-header h1 {
+			font-size: 2.2rem;
+		}
+	}
+</style>

@@ -1,0 +1,545 @@
+---
+import { getCollection } from 'astro:content';
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+const articles = (await getCollection('blog'))
+	.filter((article) => !article.data.draft);
+
+const publications = (await getCollection('publications'))
+	.filter((publication) => !publication.data.draft);
+
+const searchItems = [
+	...articles.map((article) => ({
+		type: 'Article',
+		title: article.data.title,
+		description: article.data.description,
+		url: `/blog/${article.id}/`,
+		tags: article.data.tags,
+		language: article.data.language,
+		source: 'Nick Nieuwenhuis',
+	})),
+
+	...publications.map((publication) => ({
+		type: 'Publication',
+		title: publication.data.title,
+		description:
+			publication.data.summary ||
+			publication.data.description,
+		url: publication.data.externalUrl,
+		tags: publication.data.tags,
+		language: publication.data.language,
+		source: publication.data.outlet,
+	})),
+];
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead
+			title="Search | Nick Nieuwenhuis"
+			description="Search articles and publications by Nick Nieuwenhuis."
+		/>
+
+		<style>
+			/* Header */
+
+			.search-header {
+				max-width: none;
+				margin-bottom: 2rem;
+			}
+
+			.section-kicker {
+				display: inline-block;
+				margin-bottom: 0.8rem;
+				color: var(--accent);
+				font-size: 0.66em;
+				font-weight: 600;
+				line-height: 1.4;
+				letter-spacing: 0.035em;
+			}
+
+			.search-header h1 {
+				margin: 0 0 0.8rem 0;
+				font-size: clamp(2.6rem, 4.5vw, 3.8rem);
+				line-height: 1.06;
+				letter-spacing: -0.025em;
+			}
+
+			.search-header p {
+				max-width: none;
+				margin: 0;
+				color: rgb(var(--gray));
+				font-size: 0.82em;
+				line-height: 1.6;
+			}
+
+			/* Search */
+
+			.search-area {
+				padding: 1.25rem 0;
+				border-top: 1.5px solid rgb(180, 187, 200);
+				border-bottom: 1.5px solid rgb(180, 187, 200);
+			}
+
+			.search-input {
+				width: 100%;
+				box-sizing: border-box;
+				padding: 0.75rem 0.9rem;
+				border: 1.5px solid rgb(180, 187, 200);
+				border-radius: 5px;
+				background: white;
+				color: rgb(var(--gray-dark));
+				font-family: inherit;
+				font-size: 0.76em;
+				line-height: 1.4;
+				transition:
+					border-color 0.15s ease,
+					box-shadow 0.15s ease;
+			}
+
+			.search-input:hover {
+				border-color: rgb(var(--gray));
+			}
+
+			.search-input:focus {
+				outline: none;
+				border-color: var(--accent);
+				box-shadow: 0 0 0 2px rgba(31, 58, 95, 0.1);
+			}
+
+			.search-input::placeholder {
+				color: rgb(var(--gray));
+			}
+
+			/* Results area */
+
+			.search-content {
+				padding-top: 2.75rem;
+			}
+
+			.search-results-header {
+				display: flex;
+				align-items: baseline;
+				justify-content: space-between;
+				gap: 1rem;
+				margin-bottom: 0.75rem;
+			}
+
+			.search-results-header h2 {
+				margin: 0;
+				font-size: 1.25em;
+				line-height: 1.25;
+			}
+
+			.search-summary {
+				margin: 0;
+				color: rgb(var(--gray));
+				font-size: 0.62em;
+				line-height: 1.4;
+			}
+
+			/* Initial state */
+
+			.search-start {
+				margin: 0;
+				padding: 1.75rem 0;
+				border-top: 1.5px solid rgb(180, 187, 200);
+				color: rgb(var(--gray));
+				font-size: 0.72em;
+				line-height: 1.6;
+			}
+
+			/* Result list */
+
+			.search-results {
+				margin: 0;
+				padding: 0;
+				list-style: none;
+				border-top: 1.5px solid rgb(180, 187, 200);
+			}
+
+			.search-result {
+				display: grid;
+				grid-template-columns: 145px minmax(0, 1fr) 140px;
+				gap: 2rem;
+				align-items: start;
+				padding: 1.75rem 0;
+				border-bottom: 1px solid rgb(205, 211, 220);
+			}
+
+			.search-result.hidden {
+				display: none;
+			}
+
+			/* Metadata */
+
+			.result-meta {
+				display: flex;
+				flex-direction: column;
+				gap: 0.3rem;
+				padding-top: 0.2rem;
+				color: rgb(var(--gray));
+				font-size: 0.6em;
+				line-height: 1.4;
+			}
+
+			.result-type {
+				color: var(--accent);
+				font-weight: 600;
+			}
+
+			.result-language {
+				font-weight: 600;
+			}
+
+			/* Result content */
+
+			.result-content {
+				min-width: 0;
+			}
+
+			.search-result h3 {
+				max-width: 760px;
+				margin: 0 0 0.5rem 0;
+				font-size: 1.25em;
+				line-height: 1.25;
+			}
+
+			.search-result h3 a {
+				color: rgb(var(--black));
+				text-decoration: none;
+				transition: color 0.15s ease;
+			}
+
+			.search-result h3 a:hover {
+				color: var(--accent);
+			}
+
+			.result-description {
+				max-width: 760px;
+				margin: 0;
+				color: rgb(var(--gray-dark));
+				font-size: 0.74em;
+				line-height: 1.6;
+			}
+
+			/* Result action */
+
+			.result-action {
+				display: flex;
+				justify-content: flex-end;
+				padding-top: 0.15rem;
+			}
+
+			.result-link {
+				display: inline-flex;
+				align-items: center;
+				color: var(--accent);
+				font-size: 0.64em;
+				font-weight: 600;
+				line-height: 1.3;
+				text-decoration: none;
+				white-space: nowrap;
+			}
+
+			.result-link:hover {
+				color: var(--accent-dark);
+				text-decoration: underline;
+			}
+
+			.result-link:focus-visible {
+				outline: 2px solid var(--accent);
+				outline-offset: 3px;
+			}
+
+			/* States */
+
+			.hidden {
+				display: none;
+			}
+
+			.search-empty {
+				display: none;
+				margin: 0;
+				padding: 2rem 0;
+				border-top: 1.5px solid rgb(180, 187, 200);
+				color: rgb(var(--gray));
+				font-size: 0.72em;
+				line-height: 1.6;
+			}
+
+			.search-empty.visible {
+				display: block;
+			}
+
+			/* Responsive */
+
+			@media (max-width: 850px) {
+				.search-result {
+					grid-template-columns: 110px minmax(0, 1fr);
+					gap: 1.5rem;
+				}
+
+				.result-action {
+					grid-column: 2;
+					justify-content: flex-start;
+					margin-top: 0.35rem;
+				}
+			}
+
+			@media (max-width: 700px) {
+				.search-header h1 {
+					font-size: 2.5rem;
+				}
+
+				.search-content {
+					padding-top: 2rem;
+				}
+
+				.search-result {
+					grid-template-columns: 1fr;
+					gap: 0.75rem;
+					padding: 1.5rem 0;
+				}
+
+				.result-meta {
+					flex-direction: row;
+					flex-wrap: wrap;
+					align-items: center;
+					gap: 0.4rem;
+				}
+
+				.result-meta span + span::before {
+					content: '·';
+					margin-right: 0.4rem;
+					color: rgb(180, 187, 200);
+				}
+
+				.result-action {
+					grid-column: auto;
+					justify-content: flex-start;
+				}
+			}
+
+			@media (max-width: 480px) {
+				.search-header h1 {
+					font-size: 2.2rem;
+				}
+
+				.search-result h3 {
+					font-size: 1.15em;
+				}
+			}
+		</style>
+	</head>
+
+	<body>
+		<Header />
+
+		<main>
+			<header class="search-header">
+				<span class="section-kicker">
+					Search the site
+				</span>
+
+				<h1>Search</h1>
+
+				<p>
+					Search across articles, research and publications.
+				</p>
+			</header>
+
+			<div class="search-area">
+				<input
+					id="site-search"
+					class="search-input"
+					type="search"
+					placeholder="Search for quantum, architecture, risk..."
+					aria-label="Search website"
+					autocomplete="off"
+				/>
+			</div>
+
+			<section class="search-content">
+				<div class="search-results-header">
+					<h2>Results</h2>
+
+					<p
+						id="search-summary"
+						class="search-summary"
+					></p>
+				</div>
+
+				<p
+					id="search-start"
+					class="search-start"
+				>
+					Start typing to search articles and publications.
+				</p>
+
+				<ul
+					id="search-results"
+					class="search-results hidden"
+				>
+					{searchItems.map((item) => (
+						<li
+							class="search-result hidden"
+							data-search={[
+								item.title,
+								item.description,
+								item.source,
+								...item.tags,
+							].join(' ').toLowerCase()}
+						>
+							<div class="result-meta">
+								<span class="result-type">
+									{item.type}
+								</span>
+
+								<span class="result-language">
+									{item.language === 'nl'
+										? 'Nederlands'
+										: 'English'}
+								</span>
+
+								<span>
+									{item.source}
+								</span>
+							</div>
+
+							<div class="result-content">
+								<h3>
+									<a
+										href={item.url}
+										target={item.type === 'Publication'
+											? '_blank'
+											: undefined}
+										rel={item.type === 'Publication'
+											? 'noopener noreferrer'
+											: undefined}
+									>
+										{item.title}
+									</a>
+								</h3>
+
+								<p class="result-description">
+									{item.description}
+								</p>
+							</div>
+
+							<div class="result-action">
+								<a
+									class="result-link"
+									href={item.url}
+									target={item.type === 'Publication'
+										? '_blank'
+										: undefined}
+									rel={item.type === 'Publication'
+										? 'noopener noreferrer'
+										: undefined}
+								>
+									{item.type === 'Publication'
+										? 'View publication →'
+										: 'Read article →'}
+								</a>
+							</div>
+						</li>
+					))}
+				</ul>
+
+				<p
+					id="search-empty"
+					class="search-empty"
+				>
+					No matching results found. Try a broader search term.
+				</p>
+			</section>
+		</main>
+
+		<Footer />
+
+		<script>
+			const input =
+				document.getElementById('site-search');
+
+			const results =
+				document.querySelectorAll('.search-result');
+
+			const resultsList =
+				document.getElementById('search-results');
+
+			const emptyMessage =
+				document.getElementById('search-empty');
+
+			const startMessage =
+				document.getElementById('search-start');
+
+			const summary =
+				document.getElementById('search-summary');
+
+			input?.addEventListener('input', () => {
+				const query =
+					input instanceof HTMLInputElement
+						? input.value.toLowerCase().trim()
+						: '';
+
+				let visibleCount = 0;
+
+				if (query === '') {
+					results.forEach((result) => {
+						result.classList.add('hidden');
+					});
+
+					resultsList?.classList.add('hidden');
+					startMessage?.classList.remove('hidden');
+					emptyMessage?.classList.remove('visible');
+
+					if (summary) {
+						summary.textContent = '';
+					}
+
+					return;
+				}
+
+				startMessage?.classList.add('hidden');
+
+				results.forEach((result) => {
+					const searchableText =
+						result.getAttribute('data-search') || '';
+
+					const matches =
+						searchableText.includes(query);
+
+					result.classList.toggle(
+						'hidden',
+						!matches
+					);
+
+					if (matches) {
+						visibleCount++;
+					}
+				});
+
+				resultsList?.classList.toggle(
+					'hidden',
+					visibleCount === 0
+				);
+
+				emptyMessage?.classList.toggle(
+					'visible',
+					visibleCount === 0
+				);
+
+				if (summary) {
+					summary.textContent =
+						visibleCount === 1
+							? '1 result'
+							: `${visibleCount} results`;
+				}
+			});
+		</script>
+	</body>
+</html>

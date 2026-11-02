@@ -1,29 +1,412 @@
 ---
-import BaseHead from '../components/BaseHead.astro';
-import Header from '../components/Header.astro';
-import Footer from '../components/Footer.astro';
+import Layout from '../layouts/PageLayout.astro';
 ---
 
-<!doctype html>
-<html lang="en">
-<head>
-    <BaseHead
-        title="Research | Nick Nieuwenhuis"
-        description="Public speaking by Nick Nieuwenhuis."
-    />
-</head>
+<Layout
+	title="Speaking"
+	description="Public speaking by Nick Nieuwenhuis"
+>
+	<header class="speaking-header">
+		<span class="section-kicker">Speaking & sessions</span>
 
-<body>
-    <Header />
+		<h1>Public Speaking</h1>
 
-    <main>
-        <h1>Public Speaking</h1>
+		<p>
+			Want to book me for a conference, lecture or other event? Explore the sessions
+			below or get in touch to discuss possibilities. Sessions are available in both
+			Dutch and English and can be customized to the theme of your event.
+		</p>
+	</header>
 
-        <p>
-            If you're interested in booking me for an event, panel or lecture, please leave your details in the contact form below and I will contact you as soon as possible.
-        </p>
-    </main>
+	<div class="speaking-topics">
+		<section class="speaking-topic">
+			<div class="topic-content">
+				<span class="topic-level">
+					BEGINNER · INTERMEDIATE
+				</span>
 
-    <Footer />
-</body>
-</html>
+				<h2>Cybersecurity & Resilience</h2>
+
+				<p>
+					Designed for executives, policy makers and non-security professionals,
+					these sessions provide an accessible introduction to cybersecurity,
+					cyber risk and organizational resilience. The focus is on understanding
+					threats, making informed decisions and building resilient organizations.
+				</p>
+
+				<a
+					class="booking-link"
+					href="mailto:nick@nicknieuwenhuis.com?subject=Booking%20Request%3A%20Cybersecurity%20%26%20Resilience"
+				>
+					Book this session →
+				</a>
+			</div>
+
+			<div class="topic-image">
+				<img
+					src="/images/speaking/SPAN-stage.JPG"
+					alt="Presentation on cybersecurity and resilience at SPAN"
+				/>
+			</div>
+		</section>
+
+		<section class="speaking-topic speaking-topic-reverse">
+			<div class="topic-content">
+				<span class="topic-level">
+					INTERMEDIATE · ADVANCED
+				</span>
+
+				<h2>Security Architecture & Risk Management</h2>
+
+				<p>
+					Designed for security professionals, architects, risk managers and CISOs.
+					Topics include security architecture, cyber risk management, security
+					strategy, governance, digital resilience and the role of architecture
+					in enabling secure business transformation.
+				</p>
+
+				<a
+					class="booking-link"
+					href="mailto:nick@nicknieuwenhuis.com?subject=Booking%20Request%3A%20Security%20Architecture%20%26%20Risk%20Management"
+				>
+					Book this session →
+				</a>
+			</div>
+
+			<div class="topic-image">
+				<img
+					src="/images/speaking/SPAN-cyberrisks.JPG"
+					alt="Presentation on cyber risk and security architecture at SPAN"
+				/>
+			</div>
+		</section>
+
+		<section class="speaking-topic">
+			<div class="topic-content">
+				<span class="topic-level">
+					INTERMEDIATE · ADVANCED
+				</span>
+
+				<h2>Quantum Security</h2>
+
+				<p>
+					Designed for security professionals, policy makers and organizations
+					preparing for the post-quantum era. Topics include quantum threats,
+					post-quantum cryptography, migration strategies and long-term
+					resilience planning.
+				</p>
+
+				<a
+					class="booking-link"
+					href="mailto:nick@nicknieuwenhuis.com?subject=Booking%20Request%3A%20Quantum%20Security"
+				>
+					Book this session →
+				</a>
+			</div>
+
+			<div class="topic-image">
+				<img
+					src="/images/speaking/Bsides-quantum.jpg"
+					alt="Presentation on quantum security at BSides"
+				/>
+			</div>
+		</section>
+	</div>
+
+	<section class="speaking-contact">
+		<div>
+			<span class="section-kicker">Other engagements</span>
+
+			<h2>Looking for something else?</h2>
+		</div>
+
+		<div class="speaking-contact-content">
+			<p>
+				For keynotes, guest lectures, panel discussions or other speaking
+				engagements, feel free to get in touch to discuss the possibilities.
+			</p>
+
+			<a
+				class="contact-link"
+				href="mailto:nick@nicknieuwenhuis.com?subject=Speaking%20Enquiry"
+			>
+				Get in touch →
+			</a>
+		</div>
+	</section>
+</Layout>
+
+<style>
+	/* Shared editorial label */
+
+	.section-kicker {
+		display: inline-block;
+		margin-bottom: 0.8rem;
+		color: var(--accent);
+		font-size: 0.66em;
+		font-weight: 600;
+		line-height: 1.4;
+		letter-spacing: 0.035em;
+	}
+
+	/* Header */
+
+	.speaking-header {
+		max-width: none;
+		margin-bottom: 2.75rem;
+	}
+
+	.speaking-header h1 {
+		margin: 0 0 0.8rem 0;
+		font-size: clamp(2.6rem, 4.5vw, 3.8rem);
+		line-height: 1.06;
+		letter-spacing: -0.025em;
+	}
+
+	.speaking-header p {
+		max-width: none;
+		margin: 0;
+		color: rgb(var(--gray));
+		font-size: 0.82em;
+		line-height: 1.6;
+	}
+
+	/* Speaking topics */
+
+	.speaking-topics {
+		display: flex;
+		flex-direction: column;
+		border-top: 1.5px solid rgb(180, 187, 200);
+	}
+
+	.speaking-topic {
+		display: grid;
+		grid-template-columns: minmax(0, 1.25fr) minmax(300px, 0.75fr);
+		gap: 4.5rem;
+		align-items: center;
+		padding: 3.75rem 0;
+	}
+
+	.speaking-topic + .speaking-topic {
+		border-top: 1px solid rgb(215, 220, 228);
+	}
+
+	.speaking-topic-reverse {
+		grid-template-columns: minmax(300px, 0.75fr) minmax(0, 1.25fr);
+	}
+
+	.speaking-topic-reverse .topic-content {
+		order: 2;
+	}
+
+	.speaking-topic-reverse .topic-image {
+		order: 1;
+	}
+
+	/* Topic content */
+
+	.topic-content {
+		min-width: 0;
+	}
+
+	.topic-level {
+		display: inline-block;
+		margin-bottom: 0.55rem;
+		color: var(--accent);
+		font-size: 0.58em;
+		font-weight: 600;
+		line-height: 1.4;
+		letter-spacing: 0.045em;
+	}
+
+	.topic-content h2 {
+		max-width: 680px;
+		margin: 0 0 0.8rem 0;
+		font-size: 1.55em;
+		line-height: 1.2;
+	}
+
+	.topic-content p {
+		max-width: 680px;
+		margin: 0;
+		color: rgb(var(--gray-dark));
+		font-size: 0.76em;
+		line-height: 1.7;
+	}
+
+	/* Booking links */
+
+	.booking-link {
+		display: inline-flex;
+		align-items: center;
+		width: fit-content;
+		margin-top: 1.25rem;
+		padding: 0.48rem 0.75rem;
+		border: 1px solid var(--accent);
+		border-radius: 5px;
+		background: transparent;
+		color: var(--accent);
+		font-size: 0.66em;
+		font-weight: 600;
+		line-height: 1.2;
+		text-decoration: none;
+		transition:
+			background-color 0.15s ease,
+			border-color 0.15s ease,
+			color 0.15s ease;
+	}
+
+	.booking-link:hover {
+		border-color: var(--accent-dark);
+		background: var(--accent-dark);
+		color: white;
+		text-decoration: none;
+	}
+
+	.booking-link:focus-visible {
+		outline: 2px solid var(--accent);
+		outline-offset: 3px;
+	}
+
+	/* Images */
+
+	.topic-image {
+		width: 100%;
+		max-width: 390px;
+		min-width: 0;
+	}
+
+	.speaking-topic:not(.speaking-topic-reverse) .topic-image {
+		justify-self: end;
+	}
+
+	.speaking-topic-reverse .topic-image {
+		justify-self: start;
+	}
+
+	.topic-image img {
+		display: block;
+		width: 100%;
+		aspect-ratio: 4 / 3;
+		object-fit: cover;
+		border-radius: 8px;
+	}
+
+	/* Closing contact section */
+
+	.speaking-contact {
+		display: grid;
+		grid-template-columns: minmax(220px, 0.65fr) minmax(0, 1.35fr);
+		gap: 4rem;
+		align-items: start;
+		padding: 3rem 0 1rem;
+		border-top: 1.5px solid rgb(180, 187, 200);
+	}
+
+	.speaking-contact .section-kicker {
+		margin-bottom: 0.35rem;
+	}
+
+	.speaking-contact h2 {
+		margin: 0;
+		font-size: 1.5em;
+		line-height: 1.2;
+	}
+
+	.speaking-contact-content {
+		min-width: 0;
+	}
+
+	.speaking-contact-content p {
+		max-width: 720px;
+		margin: 0;
+		color: rgb(var(--gray-dark));
+		font-size: 0.72em;
+		line-height: 1.7;
+	}
+
+	.contact-link {
+		display: inline-flex;
+		align-items: center;
+		margin-top: 0.9rem;
+		color: var(--accent);
+		font-size: 0.68em;
+		font-weight: 600;
+		text-decoration: none;
+	}
+
+	.contact-link:hover {
+		color: var(--accent-dark);
+		text-decoration: underline;
+	}
+
+	.contact-link:focus-visible {
+		outline: 2px solid var(--accent);
+		outline-offset: 3px;
+	}
+
+	/* Responsive */
+
+	@media (max-width: 850px) {
+		.speaking-topic,
+		.speaking-topic-reverse {
+			grid-template-columns: 1fr;
+			gap: 1.75rem;
+		}
+
+		.speaking-topic-reverse .topic-content {
+			order: 1;
+		}
+
+		.speaking-topic-reverse .topic-image {
+			order: 2;
+		}
+
+		.topic-image,
+		.speaking-topic:not(.speaking-topic-reverse) .topic-image,
+		.speaking-topic-reverse .topic-image {
+			width: 100%;
+			max-width: 520px;
+			justify-self: start;
+		}
+
+		.speaking-contact {
+			grid-template-columns: minmax(180px, 0.5fr) minmax(0, 1.5fr);
+			gap: 2.5rem;
+		}
+	}
+
+	@media (max-width: 700px) {
+		.speaking-header {
+			margin-bottom: 2rem;
+		}
+
+		.speaking-header h1 {
+			font-size: 2.5rem;
+		}
+
+		.speaking-topic {
+			padding: 2.5rem 0;
+		}
+
+		.speaking-contact {
+			grid-template-columns: 1fr;
+			gap: 1rem;
+			padding-top: 2.5rem;
+		}
+	}
+
+	@media (max-width: 480px) {
+		.speaking-header h1 {
+			font-size: 2.2rem;
+		}
+
+		.topic-image {
+			max-width: none;
+		}
+
+		.topic-content h2 {
+			font-size: 1.4em;
+		}
+	}
+</style>

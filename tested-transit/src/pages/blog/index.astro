@@ -1,112 +1,597 @@
 ---
-import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
 import BaseHead from '../../components/BaseHead.astro';
 import Footer from '../../components/Footer.astro';
 import FormattedDate from '../../components/FormattedDate.astro';
 import Header from '../../components/Header.astro';
-import { SITE_DESCRIPTION, SITE_TITLE } from '../../consts';
 
-const posts = (await getCollection('blog')).sort(
-	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
-);
+const posts = (await getCollection('blog'))
+	.filter((post) => !post.data.draft)
+	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 ---
 
 <!doctype html>
 <html lang="en">
 	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+		<BaseHead
+			title="Blog | Nick Nieuwenhuis"
+			description="Here you can find my latest blogs on cybersecurity, resilience, risk, architecture and quantum security."
+		/>
+
 		<style>
-			main {
-				width: 960px;
+			/* Header */
+
+			.blog-header {
+				max-width: none;
+				margin-bottom: 2rem;
 			}
-			ul {
-				display: flex;
-				flex-wrap: wrap;
-				gap: 2rem;
-				list-style-type: none;
-				margin: 0;
-				padding: 0;
+
+			.section-kicker {
+				display: inline-block;
+				margin-bottom: 0.8rem;
+				color: var(--accent);
+				font-size: 0.66em;
+				font-weight: 600;
+				line-height: 1.4;
+				letter-spacing: 0.035em;
 			}
-			ul li {
-				width: calc(50% - 1rem);
+
+			.blog-header h1 {
+				margin: 0 0 0.8rem 0;
+				font-size: clamp(2.6rem, 4.5vw, 3.8rem);
+				line-height: 1.06;
+				letter-spacing: -0.025em;
 			}
-			ul li * {
-				text-decoration: none;
-				transition: 0.2s ease;
-			}
-			ul li:first-child {
-				width: 100%;
-				margin-bottom: 1rem;
-				text-align: center;
-			}
-			ul li:first-child img {
-				width: 100%;
-			}
-			ul li:first-child .title {
-				font-size: 2.369rem;
-			}
-			ul li img {
-				margin-bottom: 0.5rem;
-				border-radius: 12px;
-			}
-			ul li a {
-				display: block;
-			}
-			.title {
-				margin: 0;
-				color: rgb(var(--black));
-				line-height: 1;
-			}
-			.date {
+
+			.blog-header p {
+				max-width: none;
 				margin: 0;
 				color: rgb(var(--gray));
+				font-size: 0.82em;
+				line-height: 1.6;
 			}
-			ul li a:hover h4,
-			ul li a:hover .date {
-				color: rgb(var(--accent));
+
+			/* Search and filters */
+
+			.blog-tools {
+				display: grid;
+				grid-template-columns: minmax(0, 1fr) auto;
+				gap: 1.25rem;
+				align-items: center;
+				padding: 1.25rem 0;
+				border-top: 1.5px solid rgb(180, 187, 200);
+				border-bottom: 1.5px solid rgb(180, 187, 200);
 			}
-			ul a:hover img {
-				box-shadow: var(--box-shadow);
+
+			.blog-search {
+				width: 100%;
+				box-sizing: border-box;
+				padding: 0.65rem 0.8rem;
+				border: 1.5px solid rgb(180, 187, 200);
+				border-radius: 5px;
+				background: white;
+				color: rgb(var(--gray-dark));
+				font-family: inherit;
+				font-size: 0.72em;
+				line-height: 1.4;
+				transition:
+					border-color 0.15s ease,
+					box-shadow 0.15s ease;
 			}
-			@media (max-width: 720px) {
-				ul {
-					gap: 0.5em;
+
+			.blog-search:hover {
+				border-color: rgb(var(--gray));
+			}
+
+			.blog-search:focus {
+				outline: none;
+				border-color: var(--accent);
+				box-shadow: 0 0 0 2px rgba(31, 58, 95, 0.1);
+			}
+
+			.blog-search::placeholder {
+				color: rgb(var(--gray));
+			}
+
+			/* Language filters */
+
+			.language-filters {
+				display: flex;
+				align-items: center;
+				gap: 0.25rem;
+			}
+
+			.filter-button {
+				padding: 0.4rem 0.65rem;
+				border: 1px solid transparent;
+				border-radius: 5px;
+				background: transparent;
+				color: rgb(var(--gray));
+				font-family: inherit;
+				font-size: 0.64em;
+				font-weight: 600;
+				line-height: 1.3;
+				cursor: pointer;
+				transition:
+					background-color 0.15s ease,
+					color 0.15s ease,
+					border-color 0.15s ease;
+			}
+
+			.filter-button:hover {
+				background: rgba(var(--gray-light), 0.55);
+				color: rgb(var(--gray-dark));
+			}
+
+			.filter-button.active {
+				border-color: rgb(180, 187, 200);
+				background: rgb(238, 240, 244);
+				color: rgb(var(--black));
+			}
+
+			.filter-button:focus-visible {
+				outline: 2px solid var(--accent);
+				outline-offset: 2px;
+			}
+
+			/* Blog index */
+
+			.blog-index {
+				padding-top: 2.75rem;
+			}
+
+			.blog-index-header {
+				display: flex;
+				align-items: baseline;
+				justify-content: space-between;
+				gap: 1rem;
+				margin-bottom: 0.75rem;
+			}
+
+			.blog-index-header h2 {
+				margin: 0;
+				font-size: 1.25em;
+				line-height: 1.25;
+			}
+
+			.blog-count {
+				margin: 0;
+				color: rgb(var(--gray));
+				font-size: 0.62em;
+				line-height: 1.4;
+			}
+
+			.blog-list {
+				display: flex;
+				flex-direction: column;
+				margin: 0;
+				padding: 0;
+				list-style: none;
+				border-top: 1.5px solid rgb(180, 187, 200);
+			}
+
+			.blog-card {
+				position: relative;
+				padding: 1.2rem 0;
+				border-bottom: 1px solid rgb(205, 211, 220);
+			}
+
+			.blog-card.hidden {
+				display: none;
+			}
+
+			/* Entire blog entry is clickable */
+
+			.blog-link {
+				display: grid;
+				grid-template-columns: 150px minmax(0, 1fr) 115px;
+				gap: 2rem;
+				align-items: start;
+				color: inherit;
+				text-decoration: none;
+			}
+
+			.blog-link:hover {
+				color: inherit;
+				text-decoration: none;
+			}
+
+			.blog-link h3,
+			.blog-link p,
+			.blog-link span,
+			.blog-link time {
+				text-decoration: none;
+			}
+
+			.blog-link:focus-visible {
+				outline: 2px solid var(--accent);
+				outline-offset: 6px;
+				border-radius: 2px;
+			}
+
+			/* Metadata */
+
+			.blog-meta {
+				display: flex;
+				flex-direction: column;
+				gap: 0.3rem;
+				padding-top: 0.2rem;
+				color: rgb(var(--gray));
+				font-size: 0.6em;
+				line-height: 1.4;
+			}
+
+			.blog-language {
+				font-weight: 600;
+			}
+
+			/* Blog content */
+
+			.blog-content {
+				min-width: 0;
+			}
+
+			.blog-card h3 {
+				max-width: 760px;
+				margin: 0 0 0.35rem 0;
+				color: rgb(var(--black));
+				font-size: 1.25em;
+				line-height: 1.25;
+				transition: color 0.15s ease;
+			}
+
+			.blog-description {
+				max-width: 760px;
+				margin: 0;
+				color: rgb(var(--gray-dark));
+				font-size: 0.74em;
+				line-height: 1.6;
+			}
+
+			/* Read action */
+
+			.blog-action {
+				display: inline-flex;
+				align-items: center;
+				align-self: center;
+				justify-self: end;
+				color: var(--accent);
+				font-size: 0.74em;
+				font-weight: 700;
+				line-height: 1.3;
+				white-space: nowrap;
+				text-decoration: none;
+				transition:
+					color 0.15s ease,
+					transform 0.15s ease;
+			}
+
+			.blog-link:hover h3 {
+				color: var(--accent);
+				text-decoration: none;
+			}
+
+			.blog-link:hover .blog-action {
+				color: var(--accent-dark);
+				transform: translateX(3px);
+				text-decoration: none;
+			}
+
+			/* Empty result */
+
+			.no-results {
+				display: none;
+				margin: 0;
+				padding: 2rem 0;
+				color: rgb(var(--gray));
+				font-size: 0.76em;
+			}
+
+			.no-results.visible {
+				display: block;
+			}
+
+			/* Responsive */
+
+			@media (max-width: 850px) {
+				.blog-link {
+					grid-template-columns: 110px minmax(0, 1fr);
+					gap: 1.5rem;
 				}
-				ul li {
-					width: 100%;
-					text-align: center;
+
+				.blog-action {
+					grid-column: 2;
+					align-self: start;
+					justify-self: start;
+					margin-top: 0.5rem;
 				}
-				ul li:first-child {
-					margin-bottom: 0;
+			}
+
+			@media (max-width: 700px) {
+				.blog-header {
+					margin-bottom: 2rem;
 				}
-				ul li:first-child .title {
-					font-size: 1.563em;
+
+				.blog-header h1 {
+					font-size: 2.5rem;
+				}
+
+				.blog-tools {
+					grid-template-columns: 1fr;
+					gap: 0.75rem;
+				}
+
+				.language-filters {
+					flex-wrap: wrap;
+				}
+
+				.blog-index {
+					padding-top: 2rem;
+				}
+
+				.blog-link {
+					grid-template-columns: 1fr;
+					gap: 0.65rem;
+				}
+
+				.blog-meta {
+					flex-direction: row;
+					align-items: center;
+					gap: 0.4rem;
+				}
+
+				.blog-meta .meta-separator {
+					display: inline;
+				}
+
+				.blog-action {
+					grid-column: auto;
+					align-self: start;
+					justify-self: start;
+					margin-top: 0.35rem;
+				}
+			}
+
+			@media (min-width: 701px) {
+				.blog-meta .meta-separator {
+					display: none;
+				}
+			}
+
+			@media (max-width: 480px) {
+				.blog-header h1 {
+					font-size: 2.2rem;
+				}
+
+				.blog-card {
+					padding: 1.25rem 0;
+				}
+
+				.blog-card h3 {
+					font-size: 1.15em;
 				}
 			}
 		</style>
 	</head>
+
 	<body>
 		<Header />
+
 		<main>
-			<section>
-				<ul>
+			<header class="blog-header">
+				<span class="section-kicker">
+					Writing & perspectives
+				</span>
+
+				<h1>Blog</h1>
+
+				<p>
+					Blogs and reflections on cybersecurity, digital resilience,
+					security architecture, cyber risk and emerging technologies.
+				</p>
+			</header>
+
+			<div class="blog-tools">
+				<input
+					id="blog-search"
+					class="blog-search"
+					type="search"
+					placeholder="Search blogs..."
+					aria-label="Search blogs"
+					autocomplete="off"
+				/>
+
+				<div class="language-filters">
+					<button
+						type="button"
+						class="filter-button active"
+						data-filter="all"
+					>
+						All
+					</button>
+
+					<button
+						type="button"
+						class="filter-button"
+						data-filter="en"
+					>
+						English
+					</button>
+
+					<button
+						type="button"
+						class="filter-button"
+						data-filter="nl"
+					>
+						Nederlands
+					</button>
+				</div>
+			</div>
+
+			<section class="blog-index">
+				<div class="blog-index-header">
+					<h2>Latest blogs</h2>
+
+					<p class="blog-count" id="blog-count">
+						{posts.length} {posts.length === 1 ? 'blog' : 'blogs'}
+					</p>
+				</div>
+
+				<ul class="blog-list">
 					{posts.map((post) => (
-						<li>
-							<a href={`/blog/${post.id}/`}>
-								{post.data.heroImage && (
-									<Image width={720} height={360} src={post.data.heroImage} alt="" />
-								)}
-								<h4 class="title">{post.data.title}</h4>
-								<p class="date">
+						<li
+							class="blog-card"
+							data-language={post.data.language}
+							data-title={post.data.title.toLowerCase()}
+							data-description={post.data.description.toLowerCase()}
+							data-tags={post.data.tags.join(' ').toLowerCase()}
+						>
+							<a
+								class="blog-link"
+								href={`/blog/${post.id}/`}
+							>
+								<div class="blog-meta">
 									<FormattedDate date={post.data.pubDate} />
-								</p>
+
+									<span class="meta-separator">·</span>
+
+									<span class="blog-language">
+										{post.data.language === 'nl'
+											? 'Nederlands'
+											: 'English'}
+									</span>
+								</div>
+
+								<div class="blog-content">
+									<h3>
+										{post.data.title}
+									</h3>
+
+									<p class="blog-description">
+										{post.data.description}
+									</p>
+								</div>
+
+								<span class="blog-action">
+									Read blog →
+								</span>
 							</a>
 						</li>
 					))}
 				</ul>
+
+				<p
+					id="no-results"
+					class="no-results"
+				>
+					No blogs found.
+				</p>
 			</section>
 		</main>
+
 		<Footer />
+
+		<script>
+			const searchInput =
+				document.getElementById('blog-search');
+
+			const cards =
+				document.querySelectorAll('.blog-card');
+
+			const filterButtons =
+				document.querySelectorAll('.filter-button');
+
+			const noResults =
+				document.getElementById('no-results');
+
+			const blogCount =
+				document.getElementById('blog-count');
+
+			let activeLanguage = 'all';
+
+			function updateBlogs() {
+				const searchTerm =
+					searchInput instanceof HTMLInputElement
+						? searchInput.value.toLowerCase().trim()
+						: '';
+
+				let visibleCount = 0;
+
+				cards.forEach((card) => {
+					const title =
+						card.getAttribute('data-title') || '';
+
+					const description =
+						card.getAttribute('data-description') || '';
+
+					const tags =
+						card.getAttribute('data-tags') || '';
+
+					const language =
+						card.getAttribute('data-language') || '';
+
+					const matchesSearch =
+						searchTerm === '' ||
+						title.includes(searchTerm) ||
+						description.includes(searchTerm) ||
+						tags.includes(searchTerm);
+
+					const matchesLanguage =
+						activeLanguage === 'all' ||
+						language === activeLanguage;
+
+					const matches =
+						matchesSearch && matchesLanguage;
+
+					card.classList.toggle(
+						'hidden',
+						!matches
+					);
+
+					if (matches) {
+						visibleCount++;
+					}
+				});
+
+				if (blogCount) {
+					blogCount.textContent =
+						`${visibleCount} ${
+							visibleCount === 1
+								? 'blog'
+								: 'blogs'
+						}`;
+				}
+
+				noResults?.classList.toggle(
+					'visible',
+					visibleCount === 0
+				);
+			}
+
+			searchInput?.addEventListener(
+				'input',
+				updateBlogs
+			);
+
+			filterButtons.forEach((button) => {
+				button.addEventListener('click', () => {
+					activeLanguage =
+						button.getAttribute('data-filter') ||
+						'all';
+
+					filterButtons.forEach(
+						(otherButton) => {
+							otherButton.classList.remove(
+								'active'
+							);
+						}
+					);
+
+					button.classList.add('active');
+
+					updateBlogs();
+				});
+			});
+		</script>
 	</body>
 </html>

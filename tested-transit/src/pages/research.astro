@@ -1,32 +1,1017 @@
 ---
+import { getCollection } from 'astro:content';
 import BaseHead from '../components/BaseHead.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import FormattedDate from '../components/FormattedDate.astro';
+
+const publications = (await getCollection('publications'))
+	.filter((publication) => !publication.data.draft)
+	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+const featuredPublication = publications.find((publication) =>
+	publication.data.title
+		.toLowerCase()
+		.includes('integrating cybersecurity and enterprise architecture')
+);
+
+const archivePublications = featuredPublication
+	? publications.filter(
+			(publication) =>
+				publication.id !== featuredPublication.id
+		)
+	: publications;
+
+function getTypeLabel(type: string) {
+	switch (type) {
+		case 'academic':
+			return 'Academic';
+
+		case 'professional':
+			return 'Professional';
+
+		case 'conference':
+			return 'Conference';
+
+		default:
+			return type;
+	}
+}
 ---
 
 <!doctype html>
 <html lang="en">
-<head>
-    <BaseHead
-        title="Research | Nick Nieuwenhuis"
-        description="Research and publications by Nick Nieuwenhuis."
-    />
-</head>
+	<head>
+		<BaseHead
+			title="Publications | Nick Nieuwenhuis"
+			description="Academic work, professional publications and conference contributions by Nick Nieuwenhuis."
+		/>
 
-<body>
-    <Header />
+		<style>
+			/* Header */
 
-    <main>
-        <h1>Research & Publications</h1>
+			.publications-header {
+				max-width: none;
+				margin-bottom: 1.75rem;
+			}
 
-        <p>
-            This page provides an overview of research projects,
-            publications, presentations and other contributions related
-            to cybersecurity, cyber risk, security architecture and
-            emerging technologies.
-        </p>
-    </main>
+			.section-kicker {
+				display: inline-block;
+				margin-bottom: 0.8rem;
+				color: var(--accent);
+				font-size: 0.66em;
+				font-weight: 600;
+				line-height: 1.4;
+				letter-spacing: 0.035em;
+			}
 
-    <Footer />
-</body>
+			.publications-header h1 {
+				margin: 0 0 0.8rem 0;
+				font-size: clamp(2.6rem, 4.5vw, 3.8rem);
+				line-height: 1.06;
+				letter-spacing: -0.025em;
+			}
+
+			.publications-header p {
+				max-width: none;
+				margin: 0;
+				color: rgb(var(--gray));
+				font-size: 0.82em;
+				line-height: 1.6;
+			}
+
+			/* Featured publication */
+
+			.featured-publication {
+				display: grid;
+				grid-template-columns:
+					minmax(180px, 0.48fr)
+					minmax(0, 1.52fr);
+				gap: 4.5rem;
+				align-items: center;
+				padding: 3rem 0;
+				border-top: 1.5px solid rgb(180, 187, 200);
+				border-bottom: 1.5px solid rgb(180, 187, 200);
+			}
+
+			.featured-publication.hidden {
+				display: none;
+			}
+
+			.featured-image {
+				width: 100%;
+				max-width: 215px;
+				justify-self: center;
+			}
+
+			.featured-image img {
+				display: block;
+				width: 100%;
+				height: auto;
+				border-radius: 4px;
+			}
+
+			.featured-content {
+				min-width: 0;
+			}
+
+			.featured-meta {
+				display: flex;
+				flex-wrap: wrap;
+				align-items: center;
+				gap: 0.45rem;
+				margin-bottom: 0.55rem;
+				color: rgb(var(--gray));
+				font-size: 0.62em;
+				font-weight: 600;
+				line-height: 1.4;
+			}
+
+			.featured-type {
+				color: var(--accent);
+			}
+
+			.meta-separator {
+				color: rgb(180, 187, 200);
+			}
+
+			.featured-content h2 {
+				max-width: 780px;
+				margin: 0 0 0.55rem 0;
+				font-size: clamp(1.8rem, 3vw, 2.45rem);
+				line-height: 1.12;
+				letter-spacing: -0.015em;
+			}
+
+			.featured-info {
+				max-width: 760px;
+				margin: 0 0 0.65rem 0;
+				color: rgb(var(--gray));
+				font-size: 0.66em;
+				line-height: 1.5;
+			}
+
+			.featured-summary {
+				max-width: 760px;
+				margin: 0 0 1rem 0;
+				color: rgb(var(--gray-dark));
+				font-size: 0.76em;
+				line-height: 1.7;
+			}
+
+			.featured-actions {
+				display: flex;
+				flex-wrap: wrap;
+				align-items: center;
+				gap: 1.25rem;
+			}
+
+			.primary-publication-link {
+				display: inline-flex;
+				align-items: center;
+				padding: 0.55rem 0.85rem;
+				border: 1px solid var(--accent);
+				border-radius: 5px;
+				background: var(--accent);
+				color: white;
+				font-size: 0.68em;
+				font-weight: 600;
+				line-height: 1.2;
+				text-decoration: none;
+				transition:
+					background-color 0.15s ease,
+					border-color 0.15s ease,
+					transform 0.15s ease;
+			}
+
+			.primary-publication-link:hover {
+				border-color: var(--accent-dark);
+				background: var(--accent-dark);
+				color: white;
+				text-decoration: none;
+				transform: translateX(3px);
+			}
+
+			.primary-publication-link:focus-visible {
+				outline: 2px solid var(--accent);
+				outline-offset: 3px;
+			}
+
+			/* Library */
+
+			.publication-library {
+				padding-top: 0.2rem;
+			}
+
+			.library-heading {
+				display: flex;
+				align-items: end;
+				justify-content: space-between;
+				gap: 2rem;
+				margin-bottom: 1.25rem;
+			}
+
+			.library-heading .section-kicker {
+				margin-bottom: 0.35rem;
+			}
+
+			.library-heading h2 {
+				margin: 0;
+				font-size: 1.6em;
+				line-height: 1.2;
+			}
+
+			.publication-count {
+				margin: 0;
+				color: rgb(var(--gray));
+				font-size: 0.62em;
+				line-height: 1.4;
+			}
+
+			/* Search */
+
+			.publication-tools {
+				display: grid;
+				grid-template-columns: minmax(0, 1fr) auto;
+				gap: 1.25rem;
+				align-items: center;
+				padding: 1.25rem 0;
+				border-top: 1.5px solid rgb(180, 187, 200);
+				border-bottom: 1.5px solid rgb(180, 187, 200);
+			}
+
+			.publications-search {
+				width: 100%;
+				box-sizing: border-box;
+				padding: 0.65rem 0.8rem;
+				border: 1.5px solid rgb(180, 187, 200);
+				border-radius: 5px;
+				background: white;
+				color: rgb(var(--gray-dark));
+				font-family: inherit;
+				font-size: 0.72em;
+				line-height: 1.4;
+				transition:
+					border-color 0.15s ease,
+					box-shadow 0.15s ease;
+			}
+
+			.publications-search:hover {
+				border-color: rgb(var(--gray));
+			}
+
+			.publications-search:focus {
+				outline: none;
+				border-color: var(--accent);
+				box-shadow: 0 0 0 2px rgba(31, 58, 95, 0.1);
+			}
+
+			.publications-search::placeholder {
+				color: rgb(var(--gray));
+			}
+
+			/* Filters */
+
+			.filters {
+				display: flex;
+				flex-wrap: wrap;
+				justify-content: flex-end;
+				gap: 0.35rem;
+			}
+
+			.filter-button {
+				padding: 0.4rem 0.65rem;
+				border: 1px solid transparent;
+				border-radius: 5px;
+				background: transparent;
+				color: rgb(var(--gray));
+				font-family: inherit;
+				font-size: 0.62em;
+				font-weight: 600;
+				line-height: 1.3;
+				cursor: pointer;
+				transition:
+					background-color 0.15s ease,
+					color 0.15s ease,
+					border-color 0.15s ease;
+			}
+
+			.filter-button:hover {
+				background: rgba(var(--gray-light), 0.55);
+				color: rgb(var(--gray-dark));
+			}
+
+			.filter-button.active {
+				border-color: rgb(180, 187, 200);
+				background: rgb(238, 240, 244);
+				color: rgb(var(--black));
+			}
+
+			.filter-button:focus-visible {
+				outline: 2px solid var(--accent);
+				outline-offset: 2px;
+			}
+
+			.filter-divider {
+				width: 1px;
+				margin: 0 0.2rem;
+				background: rgb(180, 187, 200);
+			}
+
+			/* Publication list */
+
+			.publication-list {
+				margin: 0;
+				padding: 0;
+				list-style: none;
+			}
+
+			.publication-card {
+				position: relative;
+				padding: 1.25rem 0;
+				border-bottom: 1px solid rgb(205, 211, 220);
+			}
+
+			.publication-card.hidden {
+				display: none;
+			}
+
+			/* Entire publication entry is clickable */
+
+			.publication-entry {
+				display: grid;
+				grid-template-columns:
+					145px
+					minmax(0, 1fr)
+					150px;
+				gap: 2.25rem;
+				align-items: start;
+				color: inherit;
+				text-decoration: none;
+			}
+
+			.publication-entry:hover {
+				color: inherit;
+				text-decoration: none;
+			}
+
+			.publication-entry h3,
+			.publication-entry p,
+			.publication-entry span,
+			.publication-entry time {
+				text-decoration: none;
+			}
+
+			.publication-entry:focus-visible {
+				outline: 2px solid var(--accent);
+				outline-offset: 6px;
+				border-radius: 2px;
+			}
+
+			/* Left metadata */
+
+			.publication-meta {
+				display: flex;
+				flex-direction: column;
+				gap: 0.3rem;
+				padding-top: 0.2rem;
+				color: rgb(var(--gray));
+				font-size: 0.6em;
+				line-height: 1.4;
+			}
+
+			.publication-type {
+				color: var(--accent);
+				font-weight: 600;
+			}
+
+			.publication-language {
+				font-weight: 600;
+			}
+
+			/* Main content */
+
+			.publication-content {
+				min-width: 0;
+			}
+
+			.publication-content h3 {
+				max-width: 760px;
+				margin: 0 0 0.3rem 0;
+				color: rgb(var(--black));
+				font-size: 1.25em;
+				line-height: 1.25;
+				transition: color 0.15s ease;
+			}
+
+			.publication-info {
+				max-width: 760px;
+				margin: 0 0 0.4rem 0;
+				color: rgb(var(--gray));
+				font-size: 0.66em;
+				line-height: 1.5;
+			}
+
+			.publication-summary {
+				max-width: 760px;
+				margin: 0;
+				color: rgb(var(--gray-dark));
+				font-size: 0.72em;
+				line-height: 1.6;
+			}
+
+			/* Right action */
+
+			.publication-action {
+				display: inline-flex;
+				align-items: center;
+				align-self: center;
+				justify-self: end;
+				color: var(--accent);
+				font-size: 0.7em;
+				font-weight: 700;
+				line-height: 1.3;
+				white-space: nowrap;
+				text-decoration: none;
+				transition:
+					color 0.15s ease,
+					transform 0.15s ease;
+			}
+
+			.publication-entry:hover h3 {
+				color: var(--accent);
+				text-decoration: none;
+			}
+
+			.publication-entry:hover .publication-action {
+				color: var(--accent-dark);
+				transform: translateX(3px);
+				text-decoration: none;
+			}
+
+			/* Empty state */
+
+			.no-results {
+				display: none;
+				margin: 0;
+				padding: 2rem 0;
+				color: rgb(var(--gray));
+				font-size: 0.76em;
+			}
+
+			.no-results.visible {
+				display: block;
+			}
+
+			/* Responsive */
+
+			@media (max-width: 900px) {
+				.featured-publication {
+					grid-template-columns:
+						minmax(170px, 0.5fr)
+						minmax(0, 1.5fr);
+					gap: 3rem;
+				}
+
+				.featured-image {
+					max-width: 195px;
+				}
+
+				.publication-entry {
+					grid-template-columns:
+						110px
+						minmax(0, 1fr);
+					gap: 1.5rem;
+				}
+
+				.publication-action {
+					grid-column: 2;
+					align-self: start;
+					justify-self: start;
+					margin-top: 0.5rem;
+				}
+			}
+
+			@media (max-width: 760px) {
+				.publications-header {
+					margin-bottom: 2rem;
+				}
+
+				.publications-header h1 {
+					font-size: 2.5rem;
+				}
+
+				.featured-publication {
+					grid-template-columns: 1fr;
+					gap: 2rem;
+					padding: 2.5rem 0;
+				}
+
+				.featured-image {
+					max-width: 190px;
+					justify-self: start;
+				}
+
+				.publication-tools {
+					grid-template-columns: 1fr;
+					gap: 0.85rem;
+				}
+
+				.filters {
+					justify-content: flex-start;
+				}
+
+				.library-heading {
+					align-items: baseline;
+				}
+			}
+
+			@media (max-width: 650px) {
+				.publication-card {
+					padding: 1.25rem 0;
+				}
+
+				.publication-entry {
+					grid-template-columns: 1fr;
+					gap: 0.65rem;
+				}
+
+				.publication-meta {
+					flex-direction: row;
+					flex-wrap: wrap;
+					align-items: center;
+					gap: 0.4rem;
+				}
+
+				.publication-meta span + span::before {
+					content: '·';
+					margin-right: 0.4rem;
+					color: rgb(180, 187, 200);
+				}
+
+				.publication-action {
+					grid-column: auto;
+					align-self: start;
+					justify-self: start;
+					margin-top: 0.35rem;
+				}
+
+				.filter-divider {
+					display: none;
+				}
+			}
+
+			@media (max-width: 480px) {
+				.publications-header h1 {
+					font-size: 2.2rem;
+				}
+
+				.featured-content h2 {
+					font-size: 1.8rem;
+				}
+
+				.library-heading {
+					align-items: flex-start;
+					flex-direction: column;
+					gap: 0.4rem;
+				}
+
+				.publication-content h3 {
+					font-size: 1.15em;
+				}
+			}
+		</style>
+	</head>
+
+	<body>
+		<Header />
+
+		<main>
+			<header class="publications-header">
+				<span class="section-kicker">
+					Research & contributions
+				</span>
+
+				<h1>Publications</h1>
+
+				<p>
+					Here you can find academic research, professional publications and conference
+					contributions on cybersecurity, architecture, risk and quantum security.
+				</p>
+			</header>
+
+			{featuredPublication && (
+				<section
+					class="featured-publication searchable-publication"
+					data-type={featuredPublication.data.type}
+					data-language={featuredPublication.data.language}
+					data-search={[
+						featuredPublication.data.title,
+						featuredPublication.data.outlet,
+						featuredPublication.data.summary || '',
+						featuredPublication.data.description,
+						featuredPublication.data.language,
+						...featuredPublication.data.tags,
+					].join(' ').toLowerCase()}
+				>
+					<div class="featured-image">
+						<img
+							src="/images/about/iceis2026-proceedings.png"
+							alt="Cover of the ICEIS 2026 conference proceedings"
+						/>
+					</div>
+
+					<div class="featured-content">
+						<span class="section-kicker">
+							Featured research
+						</span>
+
+						<div class="featured-meta">
+							<span class="featured-type">
+								{getTypeLabel(
+									featuredPublication.data.type
+								)}
+							</span>
+
+							<span class="meta-separator">·</span>
+
+							{featuredPublication.data.displayDate ? (
+								<span>
+									{featuredPublication.data.displayDate}
+								</span>
+							) : (
+								<FormattedDate
+									date={featuredPublication.data.pubDate}
+								/>
+							)}
+
+							<span class="meta-separator">·</span>
+
+							<span>
+								{featuredPublication.data.language === 'nl'
+									? 'Nederlands'
+									: 'English'}
+							</span>
+						</div>
+
+						<h2>
+							{featuredPublication.data.title}
+						</h2>
+
+						<p class="featured-info">
+							{featuredPublication.data.outlet}
+						</p>
+
+						{featuredPublication.data.summary && (
+							<p class="featured-summary">
+								{featuredPublication.data.summary}
+							</p>
+						)}
+
+						<div class="featured-actions">
+							<a
+								class="primary-publication-link"
+								href={featuredPublication.data.externalUrl}
+								target="_blank"
+								rel="noopener noreferrer"
+							>
+								{featuredPublication.data.externalLabel} →
+							</a>
+						</div>
+					</div>
+				</section>
+			)}
+
+			<section class="publication-library">
+				<div class="library-heading">
+					<div>
+						
+						<h2>Publication library</h2>
+					</div>
+
+					<p
+						class="publication-count"
+						id="publication-count"
+					>
+						{publications.length}
+						{publications.length === 1
+							? ' publication'
+							: ' publications'}
+					</p>
+				</div>
+
+				<div class="publication-tools">
+					<input
+						id="publications-search"
+						class="publications-search"
+						type="search"
+						placeholder="Search publications..."
+						aria-label="Search publications"
+						autocomplete="off"
+					/>
+
+					<div class="filters">
+						<button
+							type="button"
+							class="filter-button type-filter active"
+							data-type="all"
+						>
+							All
+						</button>
+
+						<button
+							type="button"
+							class="filter-button type-filter"
+							data-type="academic"
+						>
+							Academic
+						</button>
+
+						<button
+							type="button"
+							class="filter-button type-filter"
+							data-type="professional"
+						>
+							Professional
+						</button>
+
+						<button
+							type="button"
+							class="filter-button type-filter"
+							data-type="conference"
+						>
+							Conference
+						</button>
+
+						<span
+							class="filter-divider"
+							aria-hidden="true"
+						></span>
+
+						<button
+							type="button"
+							class="filter-button language-filter active"
+							data-language="all"
+						>
+							All languages
+						</button>
+
+						<button
+							type="button"
+							class="filter-button language-filter"
+							data-language="en"
+						>
+							English
+						</button>
+
+						<button
+							type="button"
+							class="filter-button language-filter"
+							data-language="nl"
+						>
+							Nederlands
+						</button>
+					</div>
+				</div>
+
+				<ul class="publication-list">
+					{archivePublications.map((publication) => (
+						<li
+							class="publication-card searchable-publication"
+							data-type={publication.data.type}
+							data-language={publication.data.language}
+							data-search={[
+								publication.data.title,
+								publication.data.outlet,
+								publication.data.summary || '',
+								publication.data.description,
+								publication.data.language,
+								...publication.data.tags,
+							].join(' ').toLowerCase()}
+						>
+							<a
+								class="publication-entry"
+								href={publication.data.externalUrl}
+								target="_blank"
+								rel="noopener noreferrer"
+							>
+								<div class="publication-meta">
+									<span class="publication-type">
+										{getTypeLabel(
+											publication.data.type
+										)}
+									</span>
+
+									{publication.data.displayDate ? (
+										<span>
+											{publication.data.displayDate}
+										</span>
+									) : (
+										<FormattedDate
+											date={publication.data.pubDate}
+										/>
+									)}
+
+									<span class="publication-language">
+										{publication.data.language === 'nl'
+											? 'Nederlands'
+											: 'English'}
+									</span>
+								</div>
+
+								<div class="publication-content">
+									<h3>
+										{publication.data.title}
+									</h3>
+
+									<p class="publication-info">
+										{publication.data.outlet}
+									</p>
+
+									{publication.data.summary && (
+										<p class="publication-summary">
+											{publication.data.summary}
+										</p>
+									)}
+								</div>
+
+								<span class="publication-action">
+									{publication.data.externalLabel} →
+								</span>
+							</a>
+						</li>
+					))}
+				</ul>
+
+				<p
+					id="no-publication-results"
+					class="no-results"
+				>
+					No publications found.
+				</p>
+			</section>
+		</main>
+
+		<Footer />
+
+		<script>
+			const searchInput =
+				document.getElementById(
+					'publications-search'
+				);
+
+			const publicationItems =
+				document.querySelectorAll(
+					'.searchable-publication'
+				);
+
+			const typeButtons =
+				document.querySelectorAll(
+					'.type-filter'
+				);
+
+			const languageButtons =
+				document.querySelectorAll(
+					'.language-filter'
+				);
+
+			const noResults =
+				document.getElementById(
+					'no-publication-results'
+				);
+
+			const publicationCount =
+				document.getElementById(
+					'publication-count'
+				);
+
+			let activeType = 'all';
+			let activeLanguage = 'all';
+
+			function updatePublications() {
+				const query =
+					searchInput instanceof HTMLInputElement
+						? searchInput.value
+								.toLowerCase()
+								.trim()
+						: '';
+
+				let totalVisible = 0;
+
+				publicationItems.forEach(
+					(publication) => {
+						const searchableText =
+							publication.getAttribute(
+								'data-search'
+							) || '';
+
+						const type =
+							publication.getAttribute(
+								'data-type'
+							) || '';
+
+						const language =
+							publication.getAttribute(
+								'data-language'
+							) || '';
+
+						const matchesSearch =
+							query === '' ||
+							searchableText.includes(query);
+
+						const matchesType =
+							activeType === 'all' ||
+							type === activeType;
+
+						const matchesLanguage =
+							activeLanguage === 'all' ||
+							language === activeLanguage;
+
+						const matches =
+							matchesSearch &&
+							matchesType &&
+							matchesLanguage;
+
+						publication.classList.toggle(
+							'hidden',
+							!matches
+						);
+
+						if (matches) {
+							totalVisible++;
+						}
+					}
+				);
+
+				if (publicationCount) {
+					publicationCount.textContent =
+						`${totalVisible} ${
+							totalVisible === 1
+								? 'publication'
+								: 'publications'
+						}`;
+				}
+
+				noResults?.classList.toggle(
+					'visible',
+					totalVisible === 0
+				);
+			}
+
+			searchInput?.addEventListener(
+				'input',
+				updatePublications
+			);
+
+			typeButtons.forEach((button) => {
+				button.addEventListener(
+					'click',
+					() => {
+						activeType =
+							button.getAttribute(
+								'data-type'
+							) || 'all';
+
+						typeButtons.forEach(
+							(otherButton) => {
+								otherButton.classList.remove(
+									'active'
+								);
+							}
+						);
+
+						button.classList.add('active');
+
+						updatePublications();
+					}
+				);
+			});
+
+			languageButtons.forEach((button) => {
+				button.addEventListener(
+					'click',
+					() => {
+						activeLanguage =
+							button.getAttribute(
+								'data-language'
+							) || 'all';
+
+						languageButtons.forEach(
+							(otherButton) => {
+								otherButton.classList.remove(
+									'active'
+								);
+							}
+						);
+
+						button.classList.add('active');
+
+						updatePublications();
+					}
+				);
+			});
+
+			updatePublications();
+		</script>
+	</body>
 </html>

@@ -6,29 +6,400 @@ import Layout from '../layouts/PageLayout.astro';
 	title="About Me"
 	description="About Nick Nieuwenhuis"
 >
-	<h2>Enabling organizations to change and innovate securely</h2>
+	<!-- Bio -->
 
-	<p>
-		I am a Lead Security Architect at Nedscaper, working at the intersection of cybersecurity strategy, security architecture and cyber risk management.
-		My work focuses on translating business objectives, security requirements and organizational risks into practical and scalable security capabilities.
+	<section class="about-intro">
+		<div class="about-intro-content">
+			<span class="section-kicker">About me</span>
 
-		Coming from a background in business administration, facility management and informatics, my interests extend beyond individual security controls to the architecture behind them:
-		how people, processes and technology work together to create resilient organizations that can adapt to change, withstand cyber threats and continue delivering value to their stakeholders.
-	</p>
+			<h1>Enabling organizations to change and innovate securely.</h1>
 
-	<p>
-		In addition to my professional work, I remain actively involved in academic cybersecurity research, with a particular interest in security architecture, cyber risk management and emerging technologies.
+			<p>
+				I am a Lead Security Architect at Nedscaper, working at the intersection of
+				cybersecurity strategy, security architecture and cyber risk management.
+				My work focuses on turning business objectives, security requirements and
+				organizational risks into practical and scalable security capabilities.
+				With a background spanning business administration, facility management
+				and informatics, I tend to look beyond individual controls and focus on
+				how people, processes and technology work together.
+			</p>
 
-		I collaborate with the Cyber Security lectorate of Utrecht University of Applied Sciences and contribute to the broader academic cybersecurity community.
+			<p>
+				In my day-to-day work, I help organizations and CISOs with challenges
+				across security architecture, cyber risk management and emerging areas
+				such as quantum security. I share what I learn along the way through
+				articles, research, LinkedIn, conference talks and industry publications.
+				If any of these topics resonate with you, feel free to connect or get in touch.
+			</p>
 
-		My latest publications, presentations and research activities can be found in the Research section of this website.
-	</p>
+			<div class="about-actions">
+				<a class="primary-link" href="/contact">
+					Get in touch →
+				</a>
 
-	<p>
-		I am also a regular public speaker at conferences, educational events and industry gatherings.
+				<a class="secondary-link" href="/articles">
+					Read my articles →
+				</a>
+			</div>
+		</div>
 
-		My speaking engagements primarily focus on cybersecurity architecture, digital resilience and quantum security.
+		<div class="about-image">
+			<img
+				src="/images/about/DADD2025.jpg"
+				alt="Speaking at DADD 2025"
+			/>
+		</div>
+	</section>
 
-		If you are interested in a keynote, guest lecture, panel discussion or other event, please visit the Speaking section for more information.
-	</p>
+	<!-- Areas of focus -->
+
+	<section class="focus-section">
+		<div class="focus-intro">
+			<span class="section-kicker">Areas of focus</span>
+			<h2>What I work on</h2>
+		</div>
+
+		<div class="focus-grid">
+			<div class="focus-item">
+				<span class="focus-number">01</span>
+
+				<div>
+					<h3>Security Architecture</h3>
+
+					<p>
+						Connecting security strategy, business objectives and technology
+						to design secure and resilient organizations.
+					</p>
+				</div>
+			</div>
+
+			<div class="focus-item">
+				<span class="focus-number">02</span>
+
+				<div>
+					<h3>Cyber Risk Management</h3>
+
+					<p>
+						Bringing risk and architecture together to support informed
+						security decisions and meaningful prioritization.
+					</p>
+				</div>
+			</div>
+
+			<div class="focus-item">
+				<span class="focus-number">03</span>
+
+				<div>
+					<h3>Quantum Security</h3>
+
+					<p>
+						Preparing organizations for post-quantum cryptography and
+						long-term cryptographic change.
+					</p>
+				</div>
+			</div>
+		</div>
+	</section>
+
 </Layout>
+
+<style>
+	/* Shared editorial label */
+
+	.section-kicker {
+		display: inline-block;
+		margin-bottom: 0.8rem;
+		color: var(--accent);
+		font-size: 0.66em;
+		font-weight: 600;
+		line-height: 1.4;
+		letter-spacing: 0.035em;
+	}
+
+	/* Bio */
+
+	.about-intro {
+		display: grid;
+		grid-template-columns: minmax(0, 1.02fr) minmax(400px, 0.98fr);
+		gap: 4rem;
+		align-items: center;
+		padding: 1.5rem 0 3.5rem;
+	}
+
+	.about-intro-content {
+		min-width: 0;
+	}
+
+	.about-intro-content h1 {
+		max-width: 680px;
+		margin: 0 0 1.4rem 0;
+		font-size: clamp(2.2rem, 3.5vw, 3rem);
+		line-height: 1.08;
+		letter-spacing: -0.02em;
+	}
+
+	.about-intro-content p {
+		max-width: 680px;
+		margin: 0 0 1rem 0;
+		color: rgb(var(--gray-dark));
+		font-size: 0.76em;
+		line-height: 1.7;
+	}
+
+	.about-intro-content p:last-of-type {
+		margin-bottom: 0;
+	}
+
+	/* Bio image */
+
+	.about-image {
+		width: 100%;
+		max-width: 490px;
+		justify-self: end;
+	}
+
+	.about-image img {
+		display: block;
+		width: 100%;
+		aspect-ratio: 4 / 3;
+		object-fit: cover;
+		border-radius: 8px;
+	}
+
+	/* Bio actions */
+
+	.about-actions {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 1.4rem;
+		margin-top: 1.75rem;
+	}
+
+	.primary-link,
+	.secondary-link {
+		display: inline-flex;
+		align-items: center;
+		font-size: 0.68em;
+		font-weight: 600;
+		text-decoration: none;
+	}
+
+	.primary-link {
+		padding: 0.55rem 0.85rem;
+		border: 1px solid var(--accent);
+		border-radius: 5px;
+		background: var(--accent);
+		color: white;
+	}
+
+	.primary-link:hover {
+		border-color: var(--accent-dark);
+		background: var(--accent-dark);
+		color: white;
+	}
+
+	.secondary-link {
+		color: var(--accent);
+	}
+
+	.secondary-link:hover {
+		color: var(--accent-dark);
+		text-decoration: underline;
+	}
+
+	/* Areas of focus */
+
+	.focus-section {
+		padding: 3rem 0 3.25rem;
+		border-top: 1.5px solid rgb(180, 187, 200);
+	}
+
+	.focus-intro {
+		margin-bottom: 1.6rem;
+	}
+
+	.focus-intro .section-kicker {
+		margin-bottom: 0.35rem;
+	}
+
+	.focus-intro h2 {
+		margin: 0;
+		font-size: 1.6em;
+		line-height: 1.2;
+	}
+
+	.focus-grid {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+	}
+
+	.focus-item {
+		display: grid;
+		grid-template-columns: auto 1fr;
+		gap: 1rem;
+		align-items: start;
+		padding: 0.5rem 1.75rem 0.5rem 0;
+	}
+
+	.focus-item + .focus-item {
+		border-left: 1.5px solid rgb(180, 187, 200);
+		padding-left: 1.75rem;
+	}
+
+	.focus-number {
+		padding-top: 0.15rem;
+		color: rgb(var(--gray));
+		font-size: 0.58em;
+		font-weight: 600;
+	}
+
+	.focus-item h3 {
+		margin: 0 0 0.4rem 0;
+		font-size: 1em;
+		line-height: 1.25;
+	}
+
+	.focus-item p {
+		max-width: 300px;
+		margin: 0;
+		color: rgb(var(--gray));
+		font-size: 0.65em;
+		line-height: 1.55;
+	}
+
+	/* Company */
+
+	.company-section {
+		display: grid;
+		grid-template-columns: minmax(200px, 0.55fr) minmax(0, 1.45fr);
+		gap: 4rem;
+		align-items: start;
+		padding: 2.75rem 0 1rem;
+		border-top: 1.5px solid rgb(180, 187, 200);
+	}
+
+	.company-heading {
+		min-width: 0;
+	}
+
+	.company-heading .section-kicker {
+		margin-bottom: 0.35rem;
+	}
+
+	.company-heading h2 {
+		margin: 0;
+		font-size: 1.5em;
+		line-height: 1.2;
+	}
+
+	.company-content {
+		min-width: 0;
+		padding-top: 0.1rem;
+	}
+
+	.company-content p {
+		max-width: 720px;
+		margin: 0;
+		color: rgb(var(--gray-dark));
+		font-size: 0.72em;
+		line-height: 1.7;
+	}
+
+	.company-link {
+		display: inline-flex;
+		align-items: center;
+		margin-top: 0.9rem;
+		color: var(--accent);
+		font-size: 0.68em;
+		font-weight: 600;
+		text-decoration: none;
+	}
+
+	.company-link:hover {
+		color: var(--accent-dark);
+		text-decoration: underline;
+	}
+
+	/* Focus states */
+
+	.primary-link:focus-visible,
+	.secondary-link:focus-visible,
+	.company-link:focus-visible {
+		outline: 2px solid var(--accent);
+		outline-offset: 3px;
+	}
+
+	/* Responsive */
+
+	@media (max-width: 850px) {
+		.about-intro {
+			grid-template-columns: 1fr;
+			gap: 2rem;
+			align-items: start;
+		}
+
+		.about-image {
+			width: 100%;
+			max-width: 520px;
+			justify-self: start;
+		}
+
+		.company-section {
+			grid-template-columns: minmax(160px, 0.45fr) minmax(0, 1.55fr);
+			gap: 2.5rem;
+		}
+	}
+
+	@media (max-width: 700px) {
+		.about-intro {
+			padding: 1rem 0 2.5rem;
+		}
+
+		.about-intro-content h1 {
+			font-size: 2.4rem;
+		}
+
+		.about-image {
+			max-width: none;
+		}
+
+		.focus-section {
+			padding: 2.5rem 0;
+		}
+
+		.focus-grid {
+			grid-template-columns: 1fr;
+		}
+
+		.focus-item {
+			padding: 1.25rem 0;
+		}
+
+		.focus-item + .focus-item {
+			border-left: 0;
+			border-top: 1px solid rgb(180, 187, 200);
+			padding-left: 0;
+		}
+
+		.focus-item p {
+			max-width: none;
+		}
+
+		.company-section {
+			grid-template-columns: 1fr;
+			gap: 1rem;
+			padding-top: 2.5rem;
+		}
+	}
+
+	@media (max-width: 480px) {
+		.about-intro-content h1 {
+			font-size: 2.2rem;
+		}
+
+		.about-actions {
+			gap: 1rem;
+		}
+	}
+</style>
