@@ -268,22 +268,6 @@ import Footer from '../components/Footer.astro';
 					border-top: 1px solid rgb(205, 211, 220);
 					border-left: 0;
 				}
-
-				.social-grid {
-					grid-template-columns: repeat(2, minmax(0, 1fr));
-				}
-
-				.social-item:first-child {
-					padding-left: 1.4rem;
-				}
-
-				.social-item:nth-child(3) {
-					border-left: 0;
-				}
-
-				.social-item:nth-child(n + 3) {
-					border-top: 1px solid rgb(205, 211, 220);
-				}
 			}
 
 			@media (max-width: 600px) {
@@ -295,18 +279,69 @@ import Footer from '../components/Footer.astro';
 					font-size: 2.5rem;
 				}
 
+				.contact-header p {
+					font-size: 0.76em;
+				}
+
 				.contact-panel {
 					padding: 2rem 0;
 				}
 
 				.contact-details {
-					align-items: flex-start;
-					flex-direction: column;
-					gap: 1rem;
+					margin-top: 1.5rem;
 				}
 
 				.social-section {
 					padding-top: 2rem;
+				}
+
+				.social-header {
+					margin-bottom: 1rem;
+				}
+
+				.social-header h2 {
+					font-size: 1.25em;
+				}
+
+				.social-grid {
+					display: flex;
+					flex-direction: column;
+				}
+
+				.social-item,
+				.social-item:first-child {
+					display: grid;
+					grid-template-columns:
+						minmax(105px, 0.7fr)
+						minmax(0, 1fr)
+						auto;
+					gap: 0.75rem;
+					align-items: center;
+					padding: 0.9rem 0.15rem;
+					border-left: 0;
+				}
+
+				.social-item + .social-item {
+					border-top: 1px solid rgb(205, 211, 220);
+					border-left: 0;
+				}
+
+				.social-name {
+					margin: 0;
+					font-size: 0.72em;
+				}
+
+				.social-description {
+					font-size: 0.6em;
+				}
+
+				.social-arrow {
+					margin: 0;
+					font-size: 0.72em;
+				}
+
+				.social-item:hover {
+					background: transparent;
 				}
 			}
 
@@ -315,23 +350,13 @@ import Footer from '../components/Footer.astro';
 					font-size: 2.2rem;
 				}
 
-				.social-grid {
-					grid-template-columns: 1fr;
-				}
-
 				.social-item,
 				.social-item:first-child {
-					padding: 1rem 0;
-					border-left: 0;
-				}
-
-				.social-item + .social-item,
-				.social-item:nth-child(n + 3) {
-					border-top: 1px solid rgb(205, 211, 220);
-				}
-
-				.social-item:hover {
-					background: transparent;
+					grid-template-columns:
+						minmax(100px, 0.8fr)
+						minmax(0, 1fr)
+						auto;
+					gap: 0.55rem;
 				}
 			}
 		</style>
@@ -411,11 +436,18 @@ import Footer from '../components/Footer.astro';
 						target="_blank"
 						rel="noopener noreferrer"
 					>
-						<span class="social-name">LinkedIn</span>
+						<span class="social-name">
+							LinkedIn
+						</span>
+
 						<span class="social-description">
 							Updates & writing
 						</span>
-						<span class="social-arrow" aria-hidden="true">
+
+						<span
+							class="social-arrow"
+							aria-hidden="true"
+						>
 							↗
 						</span>
 					</a>
@@ -426,11 +458,18 @@ import Footer from '../components/Footer.astro';
 						target="_blank"
 						rel="noopener noreferrer"
 					>
-						<span class="social-name">ResearchGate</span>
+						<span class="social-name">
+							ResearchGate
+						</span>
+
 						<span class="social-description">
 							Research & papers
 						</span>
-						<span class="social-arrow" aria-hidden="true">
+
+						<span
+							class="social-arrow"
+							aria-hidden="true"
+						>
 							↗
 						</span>
 					</a>
@@ -441,11 +480,18 @@ import Footer from '../components/Footer.astro';
 						target="_blank"
 						rel="noopener noreferrer"
 					>
-						<span class="social-name">GitHub</span>
+						<span class="social-name">
+							GitHub
+						</span>
+
 						<span class="social-description">
 							Projects & code
 						</span>
-						<span class="social-arrow" aria-hidden="true">
+
+						<span
+							class="social-arrow"
+							aria-hidden="true"
+						>
 							↗
 						</span>
 					</a>
@@ -456,11 +502,18 @@ import Footer from '../components/Footer.astro';
 						target="_blank"
 						rel="noopener noreferrer"
 					>
-						<span class="social-name">Nedscaper</span>
+						<span class="social-name">
+							Nedscaper
+						</span>
+
 						<span class="social-description">
 							Professional work
 						</span>
-						<span class="social-arrow" aria-hidden="true">
+
+						<span
+							class="social-arrow"
+							aria-hidden="true"
+						>
 							↗
 						</span>
 					</a>

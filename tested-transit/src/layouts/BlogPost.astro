@@ -3,55 +3,89 @@ import { Image } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
 import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
-import FormattedDate from '../components/FormattedDate.astro';
 import Header from '../components/Header.astro';
 
 type Props = CollectionEntry<'blog'>['data'];
 
-const { title, description, pubDate, updatedDate, heroImage, language, tags } = Astro.props;
+const {
+	title,
+	description,
+	heroImage,
+	language,
+	tags,
+} = Astro.props;
 ---
 
-<html lang="en">
+<html lang={language === 'nl' ? 'nl' : 'en'}>
 	<head>
-		<BaseHead title={title} description={description} />
+		<BaseHead
+			title={title}
+			description={description}
+		/>
+
 		<style>
+			/* Article layout */
+
 			main {
-				width: calc(100% - 2em);
+				width: 100%;
 				max-width: 100%;
 				margin: 0;
+				padding: 3rem 1rem;
+				box-sizing: border-box;
 			}
+
+			article {
+				width: 100%;
+			}
+
+			/* Hero */
+
 			.hero-image {
 				width: 100%;
 			}
+
 			.hero-image img {
 				display: block;
+				width: 100%;
+				max-width: 1020px;
+				height: auto;
 				margin: 0 auto;
 				border-radius: 12px;
 				box-shadow: var(--box-shadow);
 			}
+
+			/* Reading column */
+
 			.prose {
 				width: 720px;
-				max-width: calc(100% - 2em);
-				margin: auto;
-				padding: 1em;
+				max-width: 100%;
+				box-sizing: border-box;
+				margin: 0 auto;
+				padding: 1rem;
 				color: rgb(var(--gray-dark));
 			}
+
+			/* Article title */
+
 			.title {
-				margin-bottom: 1em;
-				padding: 1em 0;
+				margin-bottom: 1rem;
+				padding: 1rem 0;
 				text-align: center;
-				line-height: 1;
 			}
+
 			.title h1 {
 				margin: 0 0 0.5em 0;
 				font-size: 2.5em;
 				line-height: 1.1;
 				letter-spacing: -0.02em;
 			}
-			.date {
-				margin-bottom: 0.5em;
-				color: rgb(var(--gray));
+
+			.title hr {
+				margin-top: 1.25rem;
 			}
+
+			/* Metadata */
+
 			.metadata {
 				display: flex;
 				flex-wrap: wrap;
@@ -61,45 +95,172 @@ const { title, description, pubDate, updatedDate, heroImage, language, tags } = 
 				margin-bottom: 1.5em;
 				font-size: 0.75em;
 			}
+
 			.metadata > span:first-child {
 				color: rgb(var(--gray));
 				font-weight: 600;
 			}
+
 			.tag {
 				padding: 0.25em 0.65em;
 				border: 1px solid rgb(var(--gray-light));
 				border-radius: 999px;
-				color: rgb(var(--gray-dark));
 				background: white;
+				color: rgb(var(--gray-dark));
 			}
-			.last-updated-on {
-				font-style: italic;
+
+			/* Article content */
+
+			.prose :global(p) {
+				line-height: 1.75;
+			}
+
+			.prose :global(h2) {
+				margin-top: 2.25rem;
+				font-size: 1.65em;
+				line-height: 1.2;
+			}
+
+			.prose :global(h3) {
+				margin-top: 1.75rem;
+				font-size: 1.3em;
+				line-height: 1.25;
+			}
+
+			.prose :global(img) {
+				max-width: 100%;
+				height: auto;
+			}
+
+			.prose :global(pre) {
+				max-width: 100%;
+				box-sizing: border-box;
+				overflow-x: auto;
+			}
+
+			.prose :global(table) {
+				display: block;
+				max-width: 100%;
+				overflow-x: auto;
+			}
+
+			/* Tablet */
+
+			@media (max-width: 720px) {
+				main {
+					padding: 1.5rem 1rem 2.5rem;
+				}
+
+				.prose {
+					width: 100%;
+					max-width: 100%;
+					padding: 0;
+				}
+
+				.title {
+					margin-bottom: 1rem;
+					padding: 0.75rem 0 1rem;
+				}
+
+				.title h1 {
+					max-width: 100%;
+					margin-bottom: 0.65rem;
+					font-size: 2rem;
+					line-height: 1.08;
+					letter-spacing: -0.02em;
+					overflow-wrap: normal;
+					word-break: normal;
+					hyphens: none;
+				}
+
+				.metadata {
+					gap: 0.4rem;
+					margin-bottom: 1.25rem;
+					font-size: 0.7em;
+				}
+
+				.tag {
+					padding: 0.2em 0.55em;
+				}
+
+				.prose :global(p) {
+					margin-bottom: 1.5rem;
+					line-height: 1.7;
+				}
+
+				.prose :global(h2) {
+					margin-top: 2rem;
+					font-size: 1.45em;
+				}
+
+				.prose :global(h3) {
+					margin-top: 1.5rem;
+					font-size: 1.2em;
+				}
+			}
+
+			/* Small mobile */
+
+			@media (max-width: 480px) {
+				main {
+					padding: 1.25rem 1rem 2rem;
+				}
+
+				.title h1 {
+					font-size: 1.8rem;
+					line-height: 1.1;
+				}
+
+				.metadata {
+					margin-bottom: 1rem;
+					font-size: 0.68em;
+				}
 			}
 		</style>
 	</head>
 
 	<body>
 		<Header />
+
 		<main>
 			<article>
-				<div class="hero-image">
-					{heroImage && <Image width={1020} height={510} src={heroImage} alt="" />}
-				</div>
-				<div class="prose">
-					<div class="title">
-						<div class="metadata">
-							<span>{language === 'nl' ? 'Nederlands' : 'English'}</span>
-								{tags?.map((tag) => (
-									<span class="tag">{tag}</span>
-								))}
-							</div>
-						<h1>{title}</h1>
-						<hr />
+				{heroImage && (
+					<div class="hero-image">
+						<Image
+							width={1020}
+							height={510}
+							src={heroImage}
+							alt=""
+						/>
 					</div>
+				)}
+
+				<div class="prose">
+					<header class="title">
+						<div class="metadata">
+							<span>
+								{language === 'nl'
+									? 'Nederlands'
+									: 'English'}
+							</span>
+
+							{tags?.map((tag) => (
+								<span class="tag">
+									{tag}
+								</span>
+							))}
+						</div>
+
+						<h1>{title}</h1>
+
+						<hr />
+					</header>
+
 					<slot />
 				</div>
 			</article>
 		</main>
+
 		<Footer />
 	</body>
 </html>

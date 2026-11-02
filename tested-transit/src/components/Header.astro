@@ -110,12 +110,97 @@ import HeaderLink from './HeaderLink.astro';
 					</svg>
 				</a>
 			</div>
+
+			<button
+				class="menu-button"
+				type="button"
+				aria-label="Open navigation"
+				aria-expanded="false"
+				aria-controls="mobile-navigation"
+			>
+				<span></span>
+				<span></span>
+				<span></span>
+			</button>
+		</div>
+
+		<div
+			class="mobile-navigation"
+			id="mobile-navigation"
+		>
+			<a href="/">Home</a>
+			<a href="/about">About Me</a>
+			<a href="/blog">Blog</a>
+			<a href="/speaking">Speaking</a>
+			<a href="/research">Publications</a>
+			<a href="/contact">Contact</a>
 		</div>
 	</nav>
 </header>
 
+<script>
+	const menuButton =
+		document.querySelector('.menu-button');
+
+	const mobileNavigation =
+		document.querySelector('.mobile-navigation');
+
+	if (
+		menuButton instanceof HTMLButtonElement &&
+		mobileNavigation instanceof HTMLElement
+	) {
+		menuButton.addEventListener('click', () => {
+			const isOpen =
+				menuButton.getAttribute('aria-expanded') === 'true';
+
+			menuButton.setAttribute(
+				'aria-expanded',
+				String(!isOpen)
+			);
+
+			menuButton.setAttribute(
+				'aria-label',
+				isOpen
+					? 'Open navigation'
+					: 'Close navigation'
+			);
+
+			menuButton.classList.toggle(
+				'is-open',
+				!isOpen
+			);
+
+			mobileNavigation.classList.toggle(
+				'is-open',
+				!isOpen
+			);
+		});
+
+		mobileNavigation
+			.querySelectorAll('a')
+			.forEach((link) => {
+				link.addEventListener('click', () => {
+					menuButton.setAttribute(
+						'aria-expanded',
+						'false'
+					);
+
+					menuButton.setAttribute(
+						'aria-label',
+						'Open navigation'
+					);
+
+					menuButton.classList.remove('is-open');
+					mobileNavigation.classList.remove('is-open');
+				});
+			});
+	}
+</script>
+
 <style>
 	header {
+		position: relative;
+		z-index: 100;
 		margin: 0;
 		padding: 0 1.5em;
 		background: white;
@@ -124,6 +209,7 @@ import HeaderLink from './HeaderLink.astro';
 	}
 
 	nav {
+		position: relative;
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
@@ -331,6 +417,60 @@ import HeaderLink from './HeaderLink.astro';
 		font-size: 8px;
 	}
 
+	/* Mobile navigation */
+
+	.menu-button {
+		display: none;
+		align-items: center;
+		justify-content: center;
+		flex-direction: column;
+		gap: 4px;
+		width: 42px;
+		height: 38px;
+		box-sizing: border-box;
+		padding: 0;
+		border: 1.5px solid rgb(180, 187, 200);
+		border-radius: 6px;
+		background: rgb(247, 248, 250);
+		cursor: pointer;
+	}
+
+	.menu-button span {
+		display: block;
+		width: 17px;
+		height: 1.5px;
+		background: rgb(var(--gray-dark));
+		transition:
+			transform 0.15s ease,
+			opacity 0.15s ease;
+	}
+
+	.menu-button:hover {
+		border-color: rgb(145, 154, 170);
+		background: rgb(238, 240, 244);
+	}
+
+	.menu-button:focus-visible {
+		outline: 2px solid var(--accent);
+		outline-offset: 3px;
+	}
+
+	.menu-button.is-open span:nth-child(1) {
+		transform: translateY(5.5px) rotate(45deg);
+	}
+
+	.menu-button.is-open span:nth-child(2) {
+		opacity: 0;
+	}
+
+	.menu-button.is-open span:nth-child(3) {
+		transform: translateY(-5.5px) rotate(-45deg);
+	}
+
+	.mobile-navigation {
+		display: none;
+	}
+
 	/* Responsive */
 
 	@media (max-width: 1050px) {
@@ -347,31 +487,68 @@ import HeaderLink from './HeaderLink.astro';
 
 	@media (max-width: 720px) {
 		header {
-			padding: 0 0.75em;
+			padding: 0 1rem;
 		}
 
 		nav {
-			display: flex;
-			align-items: center;
-			justify-content: space-between;
-			gap: 5rem;
-			min-height: 66px;
+			flex-wrap: wrap;
+			gap: 0;
+			min-height: 64px;
+		}
+
+		.site-title {
+			display: block;
+			flex: 1;
+			font-size: 0.8em;
 		}
 
 		.internal-links {
-			width: 100%;
-			order: 2;
-			gap: 0.25rem;
-			overflow-x: auto;
-		}
-
-		.internal-links :global(a) {
-			padding: 0.8em 0.45em;
-			white-space: nowrap;
+			display: none;
 		}
 
 		.header-actions {
+			gap: 0.5rem;
 			margin-left: auto;
+		}
+
+		.social-links {
+			display: none;
+		}
+
+		.menu-button {
+			display: flex;
+		}
+
+		.mobile-navigation {
+			order: 3;
+			width: 100%;
+			box-sizing: border-box;
+			padding: 0;
+			border-top: 1px solid rgb(var(--gray-light));
+		}
+
+		.mobile-navigation.is-open {
+			display: flex;
+			flex-direction: column;
+			padding: 0.5rem 0 0.75rem;
+		}
+
+		.mobile-navigation a {
+			display: block;
+			padding: 0.65rem 0.15rem;
+			color: rgb(var(--gray-dark));
+			font-size: 0.78em;
+			font-weight: 500;
+			line-height: 1.3;
+			text-decoration: none;
+		}
+
+		.mobile-navigation a:hover {
+			color: var(--accent);
+		}
+
+		.mobile-navigation a + a {
+			border-top: 1px solid rgba(var(--gray-light), 0.7);
 		}
 	}
 </style>
