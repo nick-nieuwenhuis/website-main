@@ -10,10 +10,39 @@ type Props = CollectionEntry<'blog'>['data'];
 const {
 	title,
 	description,
+	pubDate,
+	updatedDate,
 	heroImage,
 	language,
 	tags,
 } = Astro.props;
+
+const canonicalURL = new URL(
+	Astro.url.pathname,
+	Astro.site
+).toString();
+
+const structuredData = {
+	'@context': 'https://schema.org',
+	'@type': 'BlogPosting',
+	headline: title,
+	description,
+	datePublished: pubDate.toISOString(),
+	...(updatedDate && {
+		dateModified: updatedDate.toISOString(),
+	}),
+	inLanguage: language === 'nl' ? 'nl' : 'en',
+	keywords: tags,
+	author: {
+		'@type': 'Person',
+		name: 'Nick Nieuwenhuis',
+		url: 'https://nicknieuwenhuis.com/about',
+	},
+	mainEntityOfPage: {
+		'@type': 'WebPage',
+		'@id': canonicalURL,
+	},
+};
 ---
 
 <html lang={language === 'nl' ? 'nl' : 'en'}>
@@ -22,6 +51,11 @@ const {
 			title={title}
 			description={description}
 		/>
+
+		<script
+			type="application/ld+json"
+			set:html={JSON.stringify(structuredData)}
+		></script>
 
 		<style>
 			/* Article layout */
