@@ -18,8 +18,13 @@ export default defineConfig({
     ],
 
     security: {
-        csp: true,
+    csp: {
+        directives: [
+            "object-src 'none'",
+            "base-uri 'self'",
+        ],
     },
+},
 
     markdown: {
         syntaxHighlight: 'prism',
