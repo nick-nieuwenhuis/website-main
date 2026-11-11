@@ -8,12 +8,22 @@ import { defineConfig, fontProviders } from 'astro/config';
 export default defineConfig({
     site: 'https://nicknieuwenhuis.com',
 
-    adapter: vercel(),
+    adapter: vercel({
+        staticHeaders: true,
+    }),
 
     integrations: [
         mdx(),
         sitemap(),
     ],
+
+    security: {
+        csp: true,
+    },
+
+    markdown: {
+        syntaxHighlight: 'prism',
+    },
 
     fonts: [
         {
